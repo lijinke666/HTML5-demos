@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>base64</title>
+    <style>
+        body{
+            background: #ccc;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+<script>
+    window.onload= function (){
+        var img="milk.jpg";
+        function ToBase( img ){
+            var canvas = document.getElementById("canvas");
+            var cxt = canvas.getContext("2d");
+            canvas.width=img.width;
+            canvas.height=img.height;
+            cxt.drawImage(img,0,0,img.width,img.height);
+            var hz = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
+            return canvas.toDataURL("image/"+hz);
+        }
+        var image = new Image();
+        image.src=img;
+        image.onload=function(){
+            var base64= ToBase(image);
+            alert(base64);
+        }
+    }
+
+
+</script>
+</html>

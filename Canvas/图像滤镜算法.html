@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图像滤镜算法</title>
+    <link rel="stylesheet" href="http://libs.useso.com/js/bootstrap/3.2.0/css/bootstrap.min.css">
+    <style>
+        #canvas,#canvas2{
+            float: left;
+            display: block;
+        }
+        #canvas2{
+            margin-left: 30px;
+        }
+        .clear{
+            margin-top: 40px;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<canvas id="canvas2"></canvas>
+<div class="clear container">
+    <button class="btn btn-default" onclick="imageToBlack()">三通道变黑</button>
+    <button class="btn btn-danger"  onclick="imageToRed()">改变红色通道</button>
+    <button class="btn btn-success"  onclick="imageToGreen()">改变绿色通道</button>
+    <button class="btn btn-info"  onclick="imageToBlue()">改变蓝色通道</button>
+    <button class="btn btn-grey"  onclick="imageToGrey()">灰白滤镜</button>
+    <button class="btn btn-grey"  onclick="imageToBlack2()">黑白滤镜</button>
+</div>
+
+</body>
+<script>
+    var canvas = document.getElementById('canvas');
+    var cxt = canvas.getContext('2d');
+    var canvas2 = document.getElementById('canvas2');
+    var cxt2 = canvas2.getContext('2d');
+    window.onload = function() {
+        canvas.width = canvas2.width = 440;
+        canvas.height = canvas2.height = 440;
+        var image = new Image();
+        image.src = 'milk.jpg';
+        image.onload = function () {
+            cxt.drawImage(image, 0, 0);
+        }
+    };
+
+        function imageToBlack(){
+            //getImageData     获取canvas的像素信息 返回三个值  width,height,data
+            var imageData = cxt.getImageData( 0, 0 , canvas.width, canvas.height );
+            var pixelData = imageData.data;        //图像的像素点
+            //每一个像素由4个元素组成  分别是  r g b a
+            //所以 第 i 个元素  是
+            //r = pixelData[ i*4 +0 ];
+            //g = pixelData[ i*4 +1 ];
+            //b = pixelData[ i*4 +2 ];
+            //a = pixelData[ i*4 +3 ];
+            for( var i = 0; i<pixelData.length ; i++ ){
+                pixelData[ i*4  ] = 0;         //r通道
+                pixelData[ i*4 +1 ] = 0;         //g通道
+                pixelData[ i*4 +2 ] = 0;         //b通道
+            }
+
+            cxt2.putImageData( imageData, 0, 0, 0, 0 ,canvas2.width, canvas2.height )
+        }
+
+        function imageToRed (){
+            var imageData = cxt.getImageData( 0 , 0, canvas.width, canvas.height);
+            var pixelData = imageData.data;
+            for( var i=0; i< canvas.width * canvas.height; i++ ){
+                pixelData[ i*4 ] = 0;
+            }
+            cxt2.putImageData( imageData, 0, 0, 0, 0 ,canvas2.width, canvas2.height )
+        }
+
+    function imageToGreen (){
+        var imageData = cxt.getImageData( 0 , 0, canvas.width, canvas.height);
+        var pixelData = imageData.data;
+        for( var i=0; i<canvas.width * canvas.height; i++ ){
+            pixelData[ i*4 + 1 ] = 0
+        }
+        cxt2.putImageData( imageData, 0, 0, 0, 0 ,canvas2.width, canvas2.height )
+    }
+
+    function imageToBlue (){
+        var imageData = cxt.getImageData( 0 , 0, canvas.width, canvas.height);
+        var pixelData = imageData.data;
+        for( var i=0; i<canvas.width * canvas.height; i++ ){
+            pixelData[ i*4 + 2 ] = 0
+        }
+        cxt2.putImageData( imageData, 0, 0, 0, 0 ,canvas2.width, canvas2.height )
+    }
+
+    function imageToGrey (){
+        var imageData = cxt.getImageData( 0 , 0, canvas.width, canvas.height);
+        var pixelData = imageData.data;
+        for( var i=0; i<canvas.width * canvas.height; i++ ){
+            var r = pixelData[i*4];
+            var g = pixelData[i*4 +1];
+            var b = pixelData[i*4] +2;
+
+            var grey = r*0.3 + g*0.59 + b* 0.11;      //国际 最佳灰色图像算法
+            pixelData[i*4] = grey;
+            pixelData[i*4 +1] = grey;
+            pixelData[i*4 +2] = grey;
+        }
+        cxt2.putImageData( imageData, 0, 0, 0, 0 ,canvas2.width, canvas2.height )
+    }
+
+    function imageToBlack2 (){
+        var imageData = cxt.getImageData( 0 , 0, canvas.width, canvas.height);
+        var pixelData = imageData.data;
+        for( var i=0; i<canvas.width * canvas.height; i++ ){
+            var r = pixelData[i*4];
+            var g = pixelData[i*4 +1];
+            var b = pixelData[i*4] +2;
+
+            var grey = r*0.3 + g*0.59 + b* 0.11;
+            //黑白滤镜 在灰白滤镜的基础上  对灰度进行判断
+            //如果 大于了 白色的一半  让它变为黑色 也就是255
+            //反之为白色 也就是0
+            if( grey > 255 /2){
+                color = 255;
+            }else{
+                color = 0;
+            }
+            pixelData[i*4] = color;
+            pixelData[i*4 +1] = color;
+            pixelData[i*4 +2] = color;
+        }
+        cxt2.putImageData( imageData, 0, 0, 0, 0 ,canvas2.width, canvas2.height )
+    }
+</script>
+</html>

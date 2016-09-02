@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片放大镜</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family:'Microsoft YaHei';
+        }
+        canvas{
+            display: block;
+            margin: 50px auto;
+            border:1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>       <!--图片缩放canvas-->
+<canvas id="fdj" style="display: none"></canvas>          <!--放大镜-->
+</body>
+<script>
+    window.onload=function(){
+        var canvas = document.getElementById("canvas");
+        var fdj_canvas = document.getElementById("fdj");
+        var ljk = canvas.getContext("2d");
+        var fdj = fdj_canvas.getContext("2d");
+        var isDown = false;       //鼠标是否按下
+        canvas.width = 440;
+        canvas.height= 440;
+        var scale;
+
+        var image = new Image();
+        image.src = 'milk.jpg';
+        image.onload=function() {                  //图片加载后执行
+
+            fdj_canvas.width = image.width;
+            fdj_canvas.height = image.height;
+            scale = fdj_canvas.width / canvas.width;
+            ljk.drawImage(image, 0, 0,canvas.width ,canvas.height);
+            fdj.drawImage(image, 0, 0);
+        };
+
+        canvas.onmousedown = function(e){
+            e.preventDefault();
+            isDown = true;
+        };
+
+        canvas.onmousemove = function(e){
+            e.preventDefault();
+            if(isDown){
+                var client = getXY(e.clientX, e.clientY);
+                showFdj( true, client);
+            }
+        };
+
+        canvas.onmouseup = function(e){
+            isDown=false;
+            e.preventDefault();
+            showFdj(false);
+        };
+
+        canvas.onmouseout =function(e){
+            e.preventDefault();
+            isDown=false;
+            showFdj(false);
+        }
+
+        function showFdj(isShow , client){
+            ljk.clearRect(0,0,canvas.width,canvas.height);
+            ljk.drawImage(image,0,0,canvas.width,canvas.height);
+            if(isShow == true){
+                drawFdj(client);
+            }
+        }
+
+        function drawFdj(client){
+            var imageX = client.x *scale;
+            var imageY = client.y *scale;
+            var r = 50;
+
+            var sx = imageX -r;
+            var sy = imageY -r;
+
+            var dx = client.x -r;
+            var dy = client.y-r;
+            ljk.beginPath();
+            ljk.save();
+            ljk.lineWidth =3;
+            ljk.strokeStyle ="#396";
+            ljk.arc( client.x ,client.y ,r ,0 ,Math.PI*2,false );
+            ljk.stroke();
+            ljk.clip();
+            ljk.drawImage(fdj_canvas, sx, sy, 2*r, 2*r, dx, dy, 2*r, 2*r);
+            ljk.restore();
+        }
+
+        function getXY(x,y){          //获取当前鼠标在canvas的 X Y 坐标；
+            var c = canvas.getBoundingClientRect();
+            var top = c.top;
+            var left= c.left;
+            return{
+                x:x-left,
+                y:y-top
+            }
+        }
+    }
+
+</script>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #imgBox{
+            width: 440px;
+            height: 440px;
+            border:1px solid #444;
+            margin: 50px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        #move{
+            width: 440px;
+            height: 440px;
+            position: absolute;
+            top:0;
+            left:0;
+            cursor: move;
+            user-select:none;
+        }
+        #clip-2{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border:1px solid #F63;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            margin:auto;
+            pointer-events:none;      /*让元素穿过*/
+        }
+        #clip{
+            width: 400px;
+            line-height: 40px;
+            background: none;
+            border:none;
+            text-align: center;
+            display: block;
+            margin: 10px auto 30px auto;
+            background-color: #396;
+            cursor: pointer;
+            color: #FFF;
+            font-size: 18px;
+            border-radius: 10px;
+        }
+        input[type='range']{
+            width: 440px;
+            display: block;
+            margin: 40px auto;
+        }
+        h2{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h2>珂珂裁缝铺</h2>
+<div id="imgBox">
+    <div id="move">
+        <img src="milk.jpg" alt="" id="img"/>
+    </div>
+    <div id="clip-2"></div>
+</div>
+<input type="range" max="3.0" min="0.2" step="0.01" value="1.0" id="range"/>
+<button id="clip">裁剪</button>
+</body>
+<script>
+    window.onload = function(){
+        var $ = function( id ){
+            return document.getElementById(id);
+        }
+        var move = $("move");
+        var mouseX = 0,
+            mouseY = 0;
+        var isDown = false;         //是否按下
+        var clip = $("clip");
+        var scale;           //比列
+        $("range").onmousemove = function(){
+            scale = this.value;
+            $("img").style.transform="scale("+ scale +")";
+        }
+        move.onmousedown = function(e){
+            isDown = true;
+            e.preventDefault();
+            mouseX = e.pageX - move.offsetLeft;
+            mouseY = e.pageY - move.offsetTop;
+        }
+        move.onmousemove = function(e){
+            e.preventDefault();
+            var $this = this;
+            var moveX =0;
+            var moveY =0;
+            if( isDown === true ){
+                moveX = e.pageX - mouseX;
+                moveY = e.pageY  - mouseY;
+                $this.style.top = moveY+"px";
+                $this.style.left = moveX+"px";
+            }
+        }
+        move.onmouseup = function(e){
+            e.preventDefault();
+            isDown = false;
+        }
+        move.onmouseout = function(e){
+            e.preventDefault();
+            isDown = false;
+        }
+        clip.onclick = function(){
+            var image = $("img");
+            clipImage(image);
+        }
+        function clipImage( img ){
+            var canvas = document.createElement("canvas");
+            var ljk = canvas.getContext("2d");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var cc = $("clip-2");
+            var sx = cc.offsetLeft - move.offsetLeft;
+            var sy = cc.offsetTop -move.offsetTop;
+            var width = cc.offsetWidth;
+            var height = cc.offsetHeight;
+            ljk.drawImage( img, sx / scale  , sy / scale, width / scale, height / scale, 0, 0, width,height);
+            var base = canvas.toDataURL("image/png");
+            console.log( base );
+            var imageNode = document.createElement("img");
+            imageNode.src = base;
+            document.body.appendChild(imageNode);
+        }
+    }
+
+</script>
+</html>

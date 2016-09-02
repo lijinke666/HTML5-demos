@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>本地储存--session</title>
+</head>
+<body>
+<h2>本地储存两种方式</h2>
+<p>localStorage: 永不消失</p>
+<p>sessionStorage: 浏览器重新打开消失</p>
+<button value="red" onclick="addItem(this)">点我变红色</button><br/>
+<button value="green" onclick="addItem(this)">点我变绿色</button><br/>
+<button value="blue" onclick="addItem(this)">点我变蓝色</button><br/>
+</body>
+<script>
+    var $ = function( id ){
+        return document.getElementById(id);
+    };
+    function addItem( ele ){
+        window.sessionStorage.setItem("yes",ele.value)
+        document.body.style.backgroundColor = ele.value;
+    }
+    document.write("当前保存到本地的值<strong>"+window.sessionStorage.getItem("yes")+"</strong>");
+    window.onload = function(){
+        var bgColor = window.sessionStorage.getItem("yes")
+        document.body.style.backgroundColor= bgColor;
+        console.log(JSON.parse(window.sessionStorage.getItem("yes")));
+    }
+
+</script>
+</html>

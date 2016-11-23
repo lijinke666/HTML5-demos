@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video视频</title>
+    <style>
+        *{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        body,html{
+            width: 100%;
+            height: 100%;
+        }
+        video{
+            display: block;
+            width: 100%;
+            height:100%;
+        }
+        #loading,#pause{
+            background-color: rgba(0,0,0,0.5);
+            position: absolute;
+            left:0;
+            right:0;
+            bottom:0;
+            top:0;
+            text-align: center;
+            font-size: 30px;
+            color:#FFF;
+            padding-top: 40%;
+            margin: auto;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="loading">加载中...</div>
+<div id="pause">暂停中...</div>
+<video src="http://192.168.36.154:8082/video/src/1477451000424.mp4" controls></video>
+</body>
+<script>
+    function $( id ){
+        return document.getElementById(id);
+    }
+    var lo = $('loading');
+    var video = document.querySelector('video');
+    video.addEventListener('loadstart',()=>{       //开始请求资源时
+        lo.style.display = 'block';
+    })
+    video.addEventListener('canplay',()=>{        //视频能播放时
+        if(video.readyState >= 2){
+            lo.style.display = 'none';
+            video.play();
+        }
+
+    })
+    video.addEventListener('pause',()=>{         //视频暂停时
+        $('pause').style.display ='block';
+    });
+    video.addEventListener('play',()=>{         //视频暂停时
+        $('pause').style.display ='none';
+    });
+    video.addEventListener('waiting',()=>{      //当视频由于需要缓冲下一帧而停止
+        lo.style.display ='block';
+    })
+
+    video.addEventListener('volumechange',()=>{     //音量
+        console.log('音量更改');
+    })
+
+</script>
+</html>

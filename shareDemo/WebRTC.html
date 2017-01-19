@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>WebRTC实时语音对话或视频对话API</title>
+</head>
+<body>
+  <video id="video" autoplay>
+
+  </video>
+</body>
+<script>
+navigator.getUserMedia ||
+    (navigator.getUserMedia = navigator.mozGetUserMedia ||  navigator.webkitGetUserMedia || navigator.msGetUserMedia)
+  if (navigator.getUserMedia) {
+      //do something
+      navigator.getUserMedia({
+        video:true,
+        audio:true
+      },data=>{
+        alert(data)
+      },e=>{
+        alert('错误',e)
+      })
+  } else {
+      alert('your browser not support getUserMedia');
+  }
+
+</script>
+</html>

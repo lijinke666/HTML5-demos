@@ -2,9 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="./demo.css" media="screen" title="no title" charset="utf-8">
     <title>陀螺仪(三轴)</title>
 </head>
 <body>
-
+<div id="a"></div>
+<div id="b"></div>
+<div id="c"></div>
 </body>
+<script>
+if(window.DeviceOrientationEvent){
+    window.addEventListener('deviceorientation', e =>{
+      const alpha = e.alpah,     //行动装置水平放置时，绕 Z 轴旋转的角度，数值为 0 度到 360 度
+            beta = e.beta,       //行动装置水平放置时，绕 X 轴旋转的角度，数值为 -180 度到 180 度
+            gamma = e.gamma;      //行动装置水平放置时，绕 Z 轴旋转的角度，数值为 -90 度到 90 度
+
+      console.log(alpha,beta,gamma)
+      $('a').innerHTMl = alpha;
+      $('b').innerHTMl = beta;
+      $('c').innerHTMl = gamma;
+    },false)
+}else{
+  document.querySelector('body').innerHTMl = '不支持'
+}
+  function $(id) {
+    return document.getElementById(id)
+  }
+</script>
 </html>

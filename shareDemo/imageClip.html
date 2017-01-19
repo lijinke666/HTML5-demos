@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="demo.css">
+  <title>图片裁剪</title>
+</head>
+<body>
+
+    <input type="file" id="file" value="选择图片" accept="image/*" multiple>
+    <div id="show-box">
+      <div id="clip-box"></div>
+    </div>
+    <button>上传</button>
+
+</body>
+<script src="demo.js"></script>
+<script>
+
+  window.onload = ()=>{
+    const fileBtn = $('file');
+    fileBtn.addEventListener('change',function(){
+      const files = Array.from(this.files)
+
+      files.forEach(file =>{
+        let reader = new FileReader();
+
+        reader.onload = function(){
+          let result = this.result;
+          loadImage(result).then(img=>{
+            $('show-box').appendChild(img)
+          })
+        }
+        reader.onerror = e =>{
+          console.log(e)
+        }
+        reader.readAsDataURL(file)
+      })
+    })
+  }
+
+</script>
+</html>

@@ -22,6 +22,7 @@
 <button data-color="hoary" >灰白滤镜</button>
 <button data-color="blackWhite"  >黑白滤镜</button>
 </body>
+<script src="demo.js"></script>
 <script>
     const canvasWidth = 440,
           canvasHeight = 440
@@ -60,7 +61,7 @@
         let imageData = cxt.getImageData(0,0,canvas.width,canvas.height),    //像素信息
             {data} = imageData,
             canvasArea = canvas.width * canvas.height;
-            
+
         switch (type){
             case 'black':
                 for( let i = 0; i<data.length ; i++ ){
@@ -120,22 +121,6 @@
                 break;
         }
         showCxt.putImageData( imageData, 0, 0, 0, 0 ,showCanvas.width, showCanvas.height )
-    }
-    function loadImage( src ){
-        return new Promise((res,rej)=>{
-            let img = new Image();
-            img.src = src;
-            img.onload = () =>{
-                res(img)
-            }
-            img.onerror= (e) =>{
-                rej(e)
-            }
-        })
-    }
-
-    function $(id){
-        return document.getElementById(id)
     }
 </script>
 </html>

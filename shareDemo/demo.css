@@ -42,3 +42,21 @@ canvas{
 .pull-left{
     float: left;
 }
+#show-box{
+  width:300px;
+  height:300px;
+  border:1px solid ;
+  margin: 30px 0;
+  position: relative;
+}
+#clip-box{
+  width:100px;
+  height:100px;
+  border:1px solid red;
+  position: absolute;
+  margin:auto;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+}

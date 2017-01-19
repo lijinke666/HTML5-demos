@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+</body>
+<script>
+var battery = navigator.battery || navigator.webkitBattery || navigator.mozBattery;
+
+// 电池属性
+alert("Battery charging: ", battery.charging); // true
+alert("Battery level: ", battery.level); // 0.58
+alert("Battery discharging time: ", battery.dischargingTime);
+
+// 添加事件监听器
+battery.addEventListener("chargingchange", function(e) {  
+alert("Battery charge change: ", battery.charging);
+}, false);
+</script>
+</html>

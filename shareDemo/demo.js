@@ -13,4 +13,14 @@ function loadImage( src ){
             rej(e)
         }
     })
+
+}
+
+function getXY ( ele ) {
+  const x = ele.getBoundingClientRect().left;
+  const y = ele.getBoundingClientRect().top
+  return {
+    x,
+    y
+  }
 }

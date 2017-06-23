@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML自定义元素</title>
+</head>
+<body>
+    <lijinke>在HTML5标准里 自定义元素没有默认的样式和行为 </lijinke>
+</body>
+<script>
+    // 在js 里面一样能拿到
+    const ljk = document.querySelector('lijinke')
+    console.log(ljk.innerHTML); 
+    //浏览器提供了一个 HTMLUnknownElement 对象
+    console.log( ljk instanceof HTMLUnknownElement );
+    console.log( ljk instanceof HTMLElement );
+</script>
+</html>

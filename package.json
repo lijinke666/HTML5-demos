@@ -1,0 +1,8 @@
+{
+  "scripts":{
+    "start":"browser-sync start --server --files '**/*.html, **/*.css' "
+  },
+  "dependencies": {
+    "browser-sync": "^2.18.12"
+  }
+}

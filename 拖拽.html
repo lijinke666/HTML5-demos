@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖拽</title>
+    <style>
+        .content{
+            width:300px;
+            height:300px;
+            border:1px solid;
+        }
+    </style>
+</head>
+<body>
+    <h2>拖放图片到方框中</h2>
+    <div class="content">
+
+    </div>
+    <img src="./Canvas/milk.jpg" draggable="true" id="Demo">     <!-- 设置图片可以拖拽 -->
+</body>
+<script>
+    const $ = (seletor)=> document.querySelector(seletor)
+
+    window.onload = ()=>{
+
+        $('img').addEventListener('dragstart',(e)=>{
+            e.dataTransfer.setData("Test",e.target.id);
+        })
+        $('.content').addEventListener('dragover',(e)=>{         //不绑定 结束事件 拿不到东西
+            e.preventDefault()
+        })
+        $('.content').addEventListener('drop',(e)=>{
+            e.preventDefault()
+            const data = e.dataTransfer.getData('Test')
+            e.target.appendChild($(`#${data}`))
+        })
+    }
+</script>
+</html>

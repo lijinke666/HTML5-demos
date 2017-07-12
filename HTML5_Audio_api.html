@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML5 audio api </title>
+    <style>
+        .section {
+            height: 300px;
+            border: 1px solid;
+            margin: 10px auto;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .section::before {
+            content: "可以拖拽";
+            position: absolute;
+            left: 0;
+            top: 20px;
+        }
+
+        .section::backdrop {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="file" id="file" value="选择音乐">
+    <h2>这里的声音是通过 js 的 AudioContext api 播放的 不是 audio 标签</h2>
+    <div class="section">
+
+    </div>
+</body>
+<script>
+    const $ = (seletor) => document.querySelector(seletor)
+
+    window.onload = () => {
+        const fileBtn = $('#file')
+        const section = $('.section')
+        const _this = this
+        file.onchange = () => {
+            const file = fileBtn.files[0]
+            const { name: fileName } = file
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                const result = e.target.result
+                const audio = new AudioContext()
+                audio.decodeAudioData(result, (buffer) => {         //利用auidoContext 对音频文件解码
+                    //  创建一个流 调用start 就可以播放音乐了 我感觉 <audio></aduio> 底层就是调用的这个api
+                    const node = audio.createBufferSource()
+                    node.buffer = buffer                    //类似与 new Image().src  
+                    node.connect(audio.destination)         //讲这个流 连接到目的地 也就是音响 才可以有声音
+                    node.start(0)        //0 是时间  从哪段时间开始播放
+                }, (err) => {
+                    console.log('读取失败');
+                })
+            }
+            reader.readAsArrayBuffer(file)       // audio api 接受一个buffer 
+        }
+    }
+
+</script>
+
+</html>

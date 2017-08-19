@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>刮刮卡</title>
+    <style>
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            overflow: hidden;
+            background: #ccc;
+        }
+
+        #canvas {
+            background-image: url('./shareDemo/demo.jpg');
+            display: block;
+            margin: 0 auto
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    const $ = (a) => {
+        return document.querySelector(a)
+    }
+    let isTouch = false
+    const canvasWidth = document.body.offsetWidth
+    const canvasHeight = 200
+    const clipR = 20
+
+    const canvas = $('#canvas')
+    const ctx = canvas.getContext('2d')
+
+    canvas.width = canvasWidth
+    canvas.height = canvasHeight
+
+
+    function drawCover(ctx, width, height, text = "刮一刮") {
+        ctx.save()
+        ctx.fillStyle = '#b5b5b5'
+        ctx.beginPath()
+        ctx.rect(0, 0, width, height)
+        ctx.fill()
+        ctx.restore()
+
+        ctx.save()
+        ctx.font = "50px"
+        ctx.fillStyle = '#396'
+        ctx.fillText(text, width / 2, height / 2)
+        ctx.restore()
+    }
+
+    function getCanvasBounding(e) {
+        const { clientX, clientY } = e.targetTouches[0]        //单手指
+        const { left, top } = canvas.getBoundingClientRect()
+        return {
+            x: clientX - left,
+            y: clientY - top
+        }
+    }
+    function clip(ctx, clipX, clipY, r) {
+        ctx.save()
+        ctx.beginPath()
+        ctx.arc(clipX, clipY, r, 0, Math.PI * 2, false)
+        ctx.clip()
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.restore()
+    }
+
+    //触碰
+    canvas.addEventListener('touchstart', (e) => {
+        const { x, y } = getCanvasBounding(e)
+        isTouch = true
+        clip(ctx, x, y, clipR)
+    })
+    //开始刮
+    canvas.addEventListener('touchmove', (e) => {
+        let xy = 0
+        if (isTouch === true) {
+            xy = getCanvasBounding(e)
+            clip(ctx, xy.x, xy.y, clipR)
+        }
+    })
+    canvas.addEventListener('touchend', (e) => {
+        isTouch = false
+    })
+    window.onload = () => {
+        drawCover(ctx, canvas.width, canvas.height)
+    }
+
+</script>
+
+</html>

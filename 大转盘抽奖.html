@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>大转盘抽奖</title>
+    <style>
+        #canvas {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+
+    const canvas = document.getElementById("canvas")
+    const ctx = canvas.getContext('2d')
+    const canvasWidth = 500
+    const canvasHeight = 500
+
+    canvas.width = canvasWidth
+    canvas.height = canvasHeight
+
+    const prizes = ['杜蕾斯', '涛涛', '香蕉', 'iphone 6s', 'iphone 6s plus', '优惠券','避孕套','飞机杯']
+
+    let startRotate = 0                       // 绘制奖项的起始角，改变该值实现旋转效果
+    const awardRotate = (Math.PI * 2) / prizes.length // 每一个奖项所占的弧度  (周长/奖品长度)
+
+    const centerX = canvasWidth / 2              //圆绘制y 坐标
+    const centerY = canvasHeight / 2            //圆绘制 x 坐标
+    const R = canvasWidth / 2 - 20              //圆半径
+    const TEXT_R = R - 50                      //文字半径
+    const INSERT_R = 0                          //非零环绕原则内圆半径
+
+    let rotateTime =  0               //当前旋转时间
+    let rotateAllTime = 0             //旋转所需花费的时间
+    let rotateChange = 0                //每次旋转改变的角度
+
+    const duration = 5000             //旋转时间
+    const speed = 10                  //旋转速度
+
+    canvas.addEventListener('click',()=>{
+        rotateTime = 0
+        rotateAllTime = Math.random() * 10 + duration
+        rotateChange = Math.random() * 10 + speed
+                drawPointer(centerX,centerY)
+        rotatePrice()
+    })
+
+    function drawPointer(x,y){
+        const image = new Image()
+        image.src= "./pointer.png"
+        image.width = 100
+        image.height= 110
+        image.onload = ()=>{
+            ctx.save()
+            ctx.drawImage(image,x-image.width/2,y-image.height/2,image.width,image.height)
+            ctx.restore()
+        }
+    }
+    //获取抽中的是什么奖品
+    function getPrize() {
+        let startAngle = startRotate * 180 / Math.PI,       // 弧度转换为角度
+            awardAngle = awardRotate * 180 / Math.PI,
+
+            pointerAngle = 90,                              // 指针所指向区域的度数，该值控制选取哪个角度的值
+            overAngle = (startAngle + pointerAngle) % 360,  // 无论转盘旋转了多少圈，产生了多大的任意角，我们只需要求到当前位置起始角在360°范围内的角度值
+            restAngle = 360 - overAngle,                    // 360°减去已旋转的角度值，就是剩下的角度值
+
+            index = Math.floor(restAngle / awardAngle);     // 剩下的角度值 除以 每一个奖品的角度值，就能得到这是第几个奖品
+
+        return prizes[index];
+    }
+    //缓动函数
+    function easeOut(t, b, c, d) {
+        if ((t /= d / 2) < 1) return c / 2 * t * t + b;
+        return -c / 2 * ((--t) * (t - 2) - 1) + b;
+    };
+
+    //旋转转盘
+    function rotatePrice(){
+        rotateTime += 20
+        if(rotateTime >= rotateAllTime) {
+            return alert(getPrize()); 
+           
+        }
+        //每次旋转改变的角度
+        let  _rotateChange = (rotateChange - easeOut(rotateTime, 0, rotateChange, rotateAllTime)) * (Math.PI / 180);
+        startRotate += _rotateChange
+        drawBg()
+
+        requestAnimationFrame(rotatePrice)
+    }
+
+
+    //绘制圆盘
+    function drawBg() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+        for (let [i, prize] of prizes.entries()) {
+            const _currentStartRotate = startRotate + awardRotate * i       //当前起始角度
+            const _currentEndRotate = _currentStartRotate + awardRotate     //当前结束监督
+            ctx.save()
+            i % 2 === 0 ? ctx.fillStyle = "#396" : ctx.fillStyle = "#06a"
+            ctx.beginPath()
+            ctx.arc(centerX, centerY, R, _currentStartRotate, _currentEndRotate, false)
+            ctx.arc(centerX, centerY, INSERT_R, _currentEndRotate, _currentStartRotate, true)
+            ctx.fill()
+            ctx.closePath()
+            ctx.restore()
+
+            ctx.save()
+            ctx.beginPath()
+            ctx.font = 'bold 16px Microsoft YaHei'
+            ctx.fillStyle = '#FFF'
+            ctx.textBaseline = "middle"
+            ctx.translate(
+                centerX + Math.cos(_currentStartRotate + awardRotate / 2) * TEXT_R,
+                centerY + Math.sin(_currentStartRotate + awardRotate / 2) * TEXT_R
+            );
+            ctx.rotate(_currentStartRotate + awardRotate / 2 + Math.PI / 2);
+
+            //让文字竖直排列
+            // ctx.translate(-10,30)
+            // ctx.rotate(90/180*Math.PI)
+            //ctx.measureText 获取文字的宽度  这里获取文字宽度的一半 已达到对齐的效果
+            ctx.fillText(prize,-ctx.measureText(prize)['width']/2,0)
+
+            ctx.closePath()
+            ctx.restore()
+        }
+
+        drawPointer(centerX,centerY)
+
+    }
+
+    window.addEventListener('load', drawBg)
+
+</script>
+
+</html>

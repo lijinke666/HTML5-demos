@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基于history 实现一个简单的路由</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body,
+        html,
+        #root {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            line-height: 1
+        }
+
+        :root {
+            --page1-color: #396;
+            --page2-color: #06a;
+        }
+
+        .page {
+            color: #fff;
+            text-align: center;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%
+        }
+
+        .page1 {
+            position: relative;
+            z-index: 1;
+            background: var(--page1-color)
+        }
+
+        .page2 {
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            top: 0;
+            background: var(--page2-color);
+            transition: all .3s ease-in-out;
+            transform: translate3d(100%, 0, 0)
+        }
+
+        .page2.open {
+            transform: translate3d(0, 0, 0)
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div class="page page1">
+            <h3>我是page1</h3>
+            <p>
+                <button class="toggle">点击切换</button>
+            </p>
+        </div>
+        <div class="page page2">
+            <h3>我是page2</h3>
+            <p>
+                <button class="back">回到page1</button>
+            </p>
+        </div>
+    </div>
+</body>
+<script>
+    const $ = (v) => document.querySelector(v)
+
+    const pageName1 = 'page1'
+    const pageName2 = 'page2'
+    const activeClassName = 'open'
+
+    window.onload = () => {
+        const toggleBtn = $('.toggle')
+        const backBtn = $('.back')
+
+        toggleBtn.addEventListener('click', () => {
+            //添加一个新的状态
+            history.pushState({ page: pageName2 }, pageName1)
+            addClass($('.page2'),activeClassName)
+        })
+
+        backBtn.addEventListener('click',()=>{
+            history.back()
+        })
+    }
+
+    //window.history.replaceState(stateObj, title, url)
+    history.replaceState({ page: pageName1 }, "测试")
+
+
+    //页面的前进后退 监听 pushState 不会触发
+    window.addEventListener('popstate', () => {
+        console.log(history);
+        const { page } = history.state
+        //如果等于page2
+        if (page === pageName2) {
+            addClass($('.page2'),activeClassName)
+        }else{
+            removeClass($('.page2'),activeClassName)
+        }
+    })
+
+
+    function hasClass(elements, cName) {
+        return !!elements.className.match(new RegExp("(\\s|^)" + cName + "(\\s|$)")); 
+    };
+    function addClass(elements, cName) {
+        if (!hasClass(elements, cName)) {
+            elements.className += " " + cName;
+        };
+    };
+    function removeClass(elements, cName) {
+        if (hasClass(elements, cName)) {
+            elements.className = elements.className.replace(new RegExp("(\\s|^)" + cName + "(\\s|$)"), " "); 
+        }
+    }
+</script>
+
+</html>

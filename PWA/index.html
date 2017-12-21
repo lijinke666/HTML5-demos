@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PWA 练习</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <h3 class="title">测试 PWA 网页</h3>
+    <p>
+        通过 manifest.json 来配置 app , 之前那个 离线缓存 manifest 已经废弃了  TMD
+    </p>
+    <img src="demo.jpg" alt="">
+</body>
+<script>
+    //注册一个服务
+    if(navigator.serviceWorker != null){
+        navigator.serviceWorker.register('sw.js')             //返回一个promise对象
+        .then((registration)=>{
+            console.log(registration);
+        })
+    }
+
+    window.onload = ()=>{
+        setTimeout(()=>{
+            fetch('/PWA/fetch.json')
+            .then((res)=> res.json())
+            .then( data => console.log(data))
+            .catch( err => console.log(err))
+        })
+    }
+</script>
+</html>

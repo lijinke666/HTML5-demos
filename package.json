@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "browser-sync start --server --files '**/*.html, **/*.css' "
+    "start": "browser-sync start --server --files '**/*.html, **/*.css' ",
+    "pwa":"cd PWA && http-server -c-1"
   },
   "dependencies": {
     "browser-sync": "^2.18.12"

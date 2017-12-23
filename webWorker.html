@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>webWorker</title>
+</head>
+<body>
+    <button class="start">开启webWorker</button>
+    <button class="stop">停止webWorker</button>
+</body>
+<script>
+    const start = document.querySelector('.start')
+    const stop = document.querySelector('.stop')
+
+    let worker = null
+
+    start.addEventListener('click',()=>{
+        //后台启动一个 js
+        worker = new Worker('/webWorker.js')
+        worker.onmessage = (e)=>{
+            console.log('data',e.data);
+        }
+        worker.onerror = (e)=>{
+            console.error('error',e)
+        }
+    })
+
+    stop.addEventListener('click',()=>{
+        worker.terminate()
+    })
+</script>
+</html>

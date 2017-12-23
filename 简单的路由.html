@@ -27,6 +27,7 @@
         :root {
             --page1-color: #396;
             --page2-color: #06a;
+            --page3-color: rgb(112, 65, 87);
         }
 
         .page {
@@ -46,17 +47,22 @@
             background: var(--page1-color)
         }
 
-        .page2 {
+        .page2,.page3 {
             position: fixed;
-            z-index: 2;
             left: 0;
             top: 0;
-            background: var(--page2-color);
             transition: all .3s ease-in-out;
             transform: translate3d(100%, 0, 0)
         }
-
-        .page2.open {
+        .page2{
+            z-index: 2;
+            background: var(--page2-color);
+        }
+        .page3{
+            z-index: 3;
+            background: var(--page3-color);
+        }
+        .page.open {
             transform: translate3d(0, 0, 0)
         }
     </style>
@@ -74,6 +80,13 @@
             <h3>我是page2</h3>
             <p>
                 <button class="back">回到page1</button>
+                <button class="toggle2">切换page3</button>
+            </p>
+        </div>
+        <div class="page page3">
+            <h3>我是page3</h3>
+            <p>
+                <button class="back2">回到page2</button>
             </p>
         </div>
     </div>
@@ -83,6 +96,7 @@
 
     const pageName1 = 'page1'
     const pageName2 = 'page2'
+    const pageName3 = 'page3'
     const activeClassName = 'open'
 
     window.onload = () => {
@@ -96,6 +110,15 @@
         })
 
         backBtn.addEventListener('click',()=>{
+            history.back()
+        })
+
+        $('.toggle2').addEventListener('click',()=>{
+            location.hash = "#page3"
+            addClass($('.page3'),activeClassName)
+        })
+        $('.back2').addEventListener('click',()=>{
+            location.hash = ""
             history.back()
         })
     }
@@ -113,6 +136,14 @@
             addClass($('.page2'),activeClassName)
         }else{
             removeClass($('.page2'),activeClassName)
+        }
+    })
+
+    window.addEventListener('hashchange',()=>{
+        if (location.hash === pageName2) {
+            addClass($('.page3'),activeClassName)
+        }else{
+            removeClass($('.page3'),activeClassName)
         }
     })
 

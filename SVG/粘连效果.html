@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .target {
+            filter: url("#goo");
+        }
+
+        .share {
+            width: 64px;
+            line-height: 64px;
+            background-color: #cd0000;
+            color: #fff;
+            border-radius: 50%;
+            display: block;
+        }
+
+        [type="checkbox"] {
+            position: absolute;
+            clip: rect(0 0 0 0);
+        }
+
+        [class*="icon-share-"] {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            background-color: #cd0000;
+            border-radius: 50%;
+            transition: transform .5s;
+            transform: scale(0.5);
+        }
+
+        :checked+.target .icon-share-weibo {
+            transform: scale(1) translate(-70px, 60px);
+        }
+
+        :checked+.target .icon-share-wechat {
+            transform: scale(1) translate(0, 75px);
+        }
+
+        :checked+.target .icon-share-qq {
+            transform: scale(1) translate(70px, 60px);
+        }
+
+        :checked+.target .share {
+            animation: jello 1s;
+        }
+    </style>
+</head>
+
+<body>
+    <svg width="0" height="0">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+            </filter>
+        </defs>
+    </svg>
+    <input type="checkbox" id="share">
+    <div class="target">
+        <label class="share" for="share">分享</label>
+        <span class="icon-share-weibo">1</span>
+        <span class="icon-share-wechat">2</span>
+        <span class="icon-share-qq">3</span>
+    </div>
+</body>
+<script>
+    //http://www.zhangxinxu.com/study/201712/gooey-share.html
+</script>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" viewport-fit="cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .main{
+            padding: 12px;
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        @supports(padding: max(0px)) {
+            .main {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+            }
+        } 
+    </style>
+</head>
+<body>
+    <div class="main">
+            <h2>内容标题</h2>
+            <a href="https://zhuanlan.zhihu.com/p/32532138?group_id=931270027399680000">参考链接</a>
+    </div>
+</body>
+</html>

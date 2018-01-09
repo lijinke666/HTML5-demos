@@ -7,13 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Web Audio API实现音频可视化效果</title>
     <style>
-        html,body{
-            width:100%;
-            height:100%
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
-        canvas{
+
+        canvas {
             display: block;
-            margin:10px auto;
+            margin: 10px auto;
             background: #ccc;
         }
     </style>
@@ -26,7 +30,16 @@
 <script>
     //https://www.cnblogs.com/axes/p/3842812.html
 
-    let x = 0      //音频绘制x坐标
+
+    let bufferLen = 0
+    let dataArray = null
+
+    //audio 上下文
+    const audioCtx = new AudioContext()
+    //音频解析器
+    const analyser = audioCtx.createAnalyser()
+    //音量解析器
+    const gain = audioCtx.createGain()
 
     const canvas = document.querySelector('#canvas')
     const ctx = canvas.getContext('2d')
@@ -39,7 +52,7 @@
         const fileBtn = document.querySelector('input[type="file"]')
         fileBtn.addEventListener('change', function () {
             const file = this.files[0]
-            if(file.type !== "audio/mp3") return alert('请选择mp3文件')
+            if (file.type !== "audio/mp3") return alert('请选择mp3文件')
             const reader = new FileReader()
             reader.readAsArrayBuffer(file)         //将文件转成 buffer
             reader.onload = (e) => {
@@ -50,47 +63,30 @@
     }
 
     const playMusic = (source) => {
-        //audio 上下文
-        const audioCtx = new AudioContext()
-        //音频解析器
-        const analyser = audioCtx.createAnalyser()
-        //音量解析器
-        const gain = audioCtx.createGain()
 
         //对音频文件解码
-        audioCtx.decodeAudioData(source, (buffer) => {         
+        audioCtx.decodeAudioData(source, (buffer) => {
             //  创建一个流 调用start 就可以播放音乐了 我感觉 <audio></audio> 底层就是调用的这个api
             const node = audioCtx.createBufferSource()
 
             //循环播放
-            node.loop = true      
-             //添加内容 类似与 new Image().src                    
-            node.buffer = buffer                   
+            node.loop = true
+            //添加内容 类似与 new Image().src                    
+            node.buffer = buffer
             //连接音频解析器
             node.connect(analyser)
             //连接音量解析器
             node.connect(gain)
             //将这个流 连接到目的地 也就是音响 才可以有声音
-            node.connect(audioCtx.destination)         
+            node.connect(audioCtx.destination)
             //播放音频 0 是时间  从哪段时间开始播放
-            node.start(0)   
+            node.start(0)
 
-            node.onended = ()=>{
+            node.onended = () => {
                 console.log('播放结束')
             }
-
-            //当前音频频率
-            const bufferLen = analyser.frequencyBinCount    
-            //创建一个数组  
-            const dataArray = new Uint8Array(bufferLen)
-            console.log(dataArray);
-
-             //将音频节点的数据拷贝到Uin8Array中
-            analyser.getByteFrequencyData(dataArray)   
-
             //绘制可视化音频
-            drawSound(bufferLen,dataArray)
-            requestAnimationFrame(drawSound)
+            drawSound()
 
         }, (err) => {
             console.error('音频解码失败:', err);
@@ -99,27 +95,40 @@
     }
 
 
-    const drawSound = (bufferLen,dataArray)=>{
+    const drawSound = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        //当前音频频率
+        bufferLen = analyser.frequencyBinCount
+        //创建一个数组  
+        dataArray = new Uint8Array(bufferLen)
+
+        //将音频节点的数据拷贝到Uin8Array中
+        analyser.getByteFrequencyData(dataArray)
         //每条线的宽度  画布宽度 / 数组长度
+        let x = 0      //音频绘制x坐标
         const sliceWidth = canvasWidth / bufferLen
+
         ctx.lineWidth = 2
-        ctx.strokeStyle = "red"
+        ctx.strokeStyle = "#396"
 
-        for(let i =0; i<bufferLen; i++){
-            const v = dataArray[i] / 128
-            const y = v * canvasHeight /2
+        for (let i = 0; i < bufferLen; i++) {
+            const data = dataArray[i]
+            const v = dataArray[i] /128          //每个时段的频率
+            const y = v * canvasHeight / 2
 
-            if(i === 0){
-                ctx.moveTo(x,y)
-            }else{
-                ctx.lineTo(x,y)
+            if (i === 0) {
+                ctx.moveTo(x, y)
+            } else {
+                ctx.lineTo(x, y)
             }
-
+            // console.log(x,y);
             x += sliceWidth
         }
 
-        ctx.lineTo(canvas.width,canvas.height)
+        ctx.lineTo(canvas.width, canvas.height / 2)
         ctx.stroke()
+
+        requestAnimationFrame(drawSound)
     }
 
 

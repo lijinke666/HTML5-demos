@@ -50,7 +50,7 @@
                 const result = e.target.result
                 const audio = new AudioContext()
                 audio.decodeAudioData(result, (buffer) => {         //利用auidoContext 对音频文件解码
-                    //  创建一个流 调用start 就可以播放音乐了 我感觉 <audio></aduio> 底层就是调用的这个api
+                    //  创建一个流 调用start 就可以播放音乐了 我感觉 <audio></audio> 底层就是调用的这个api
                     const node = audio.createBufferSource()
                     node.buffer = buffer                    //类似与 new Image().src  
                     node.connect(audio.destination)         //讲这个流 连接到目的地 也就是音响 才可以有声音

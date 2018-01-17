@@ -41,8 +41,20 @@
       </menu>
 
       <h2>弹框 dialog</h2>
-      <dialog open>
+      <dialog>
         <p>Greetings, one and all!</p>
       </dialog>
+
+      <button id="openDialog">显示dialog弹框</button>
 </body>
+<script>
+  let isShow = false
+  const dialog = document.querySelector("dialog")
+
+  document.querySelector('#openDialog').addEventListener('click',()=>{
+    isShow ? dialog.close() : dialog.show()
+    isShow = !isShow
+  })
+  
+</script>
 </html>

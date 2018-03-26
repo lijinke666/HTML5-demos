@@ -5,10 +5,11 @@
     caches: 表示缓存
     skipWaiting: 表示强制当前处在 waiting 状态的脚本进入 activate 状态
     clients: 表示 Service Worker 接管的页面
+    https://fed.renren.com/2017/10/08/service-worker-notification/
  */
 
  //缓存的key
- const cacheKey = "testKey"
+ const cacheKey = "testKey2"
 
  //需要缓存的列表
  const cacheList = [
@@ -32,10 +33,11 @@
  self.addEventListener('fetch',(e)=>{
      console.log(e);
      e.respondWith(
+       //有请求来 先去缓存里找之前请求过没
          caches.match(e.request).then((res)=>{
              console.log(res);
-             if(res != null) return res
-             return fetch(e.request.url)
+             if(res != null) return res          //如果请求过 直接返回结果
+             return fetch(e.request.url)         //否则 继续请求
          })
      )
  })
@@ -58,3 +60,22 @@
       })
     )
   })
+
+
+//接收推送消息
+self.addEventListener('push', function(event) {
+    const notificationData = event.data.json();
+    const title = notificationData.title;
+    // 弹消息框
+    event.waitUntil(self.registration.showNotification(title, notificationData));
+});
+
+//推送消息点击
+self.addEventListener('notificationclick', function(event) {
+ 
+    let notification = event.notification;
+    notification.close();
+    event.waitUntil(
+        clients.openWindow(notification.data.url)
+    );
+});

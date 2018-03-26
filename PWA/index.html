@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,29 +9,69 @@
     <link rel="stylesheet" href="index.css">
     <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
     <h3 class="title">测试 PWA 网页</h3>
     <p>
-        通过 manifest.json 来配置 app , 之前那个 离线缓存 manifest 已经废弃了  TMD
+        通过 manifest.json 来配置 app , 之前那个 离线缓存 manifest 已经废弃了 TMD
     </p>
     <img src="demo.jpg" alt="">
 </body>
 <script>
     //注册一个服务
-    if(navigator.serviceWorker != null){
+    if (navigator.serviceWorker != null) {
         navigator.serviceWorker.register('sw.js')             //返回一个promise对象
-        .then((registration)=>{
-            console.log(registration);
-        })
+            .then(async (reg) => {
+                console.log(reg);
+                //订阅服务
+                if (window.PushManager) {
+                    //发起一条询问,获取当前用户是否订阅
+                    const isSubscription = await reg.pushManager.getSubscription()
+                    if (!isSubscription) {
+                        subscribeUser(reg)
+                        console.log('用户同意订阅');
+                    } else {
+                        console.log('用户已经订阅了');
+                    }
+                }
+            })
     }
 
-    window.onload = ()=>{
-        setTimeout(()=>{
+    window.onload = () => {
+        setTimeout(() => {
             fetch('/PWA/fetch.json')
-            .then((res)=> res.json())
-            .then( data => console.log(data))
-            .catch( err => console.log(err))
+                .then((res) => res.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
         })
     }
+    function urlB64ToUint8Array(base64String) {
+        const padding = "=".repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i)
+        }
+        return outputArray
+    }
+    function subscribeUser(swRegistration) {
+        const applicationServerPublicKey = "BBlY_5OeDkp2zl_Hx9jFxymKyK4kQKZdzoCoe0L5RqpiV2eK0t4zx-d3JPHlISZ0P1nQdSZsxuA5SRlDB0MZWLw";
+        const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+        swRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey
+        })
+            // 用户同意
+            .then(function (subscription) {
+                console.log('User is subscribed:', JSON.stringify(subscription));
+                console.log(subscription);
+            })
+            // 用户不同意或者生成失败
+            .catch(function (err) {
+                console.log('Failed to subscribe the user: ', err);
+            });
+    }
 </script>
+
 </html>

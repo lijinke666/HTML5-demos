@@ -7,25 +7,17 @@
   <title>code</title>
 </head>
 <body>
-  <my-code>
+  <my-card>
     <span slot="title">我是代码标题</span>
-    <p slot="code">
+    <p slot="content">
       const a = 1;
       console.log(a)
     </p>
-  </my-code>
+  </my-card>
 
-  <my-code>
-    <span slot="title">我是代码标题</span>
-    <p slot="code">
-      const a = 1;
-      console.log(a)
-    </p>
-  </my-code>
-
-  <template id="my-code-template">
+  <template id="my-card-template">
     <style>
-      .my-code {
+      .my-card {
         width: 300px;
         height: 300px;
         background: #fff;
@@ -33,29 +25,37 @@
         margin: 10px
       }
       .title {
-        padding: 40px 10px;
+        height:40px;
+        background: #dcdcdc;
+        line-height: 40px;
+        text-align: center;
+      }
+      pre {
+        padding: 20px;
       }
     </style>
-    <div class="my-code">
-      <code class="title"><slot name="title">代码标题</slot></code>
+    <div class="my-card">
+      <div class="title">
+        <slot name="title">代码标题</slot>
+      </div>
       <pre>
-        <slot name="code">代码内容</slot>
+        <slot name="content">代码内容</slot>
       </pre>
     </div>
   </template>
 </body>
 <script>
-customElements.define('my-code',
+customElements.define('my-card',
   class extends HTMLElement {
     constructor(props) {
       super();
-
-      console.log(props)
       const template = document
-        .getElementById('my-code-template')
+        .querySelector('#my-card-template')
         .content;
       const shadowRoot = this.attachShadow({mode: 'open'})
         .appendChild(template.cloneNode(true));
+
+        console.log(shadowRoot)
   }
 });
 </script>

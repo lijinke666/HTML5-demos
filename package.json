@@ -7,7 +7,7 @@
   "pre-commit": "bookmark",
   "dependencies": {
     "browser-sync": "^2.18.12",
-    "j-bookmark": "^0.1.0"
+    "j-bookmark": "^0.2.1"
   },
   "devDependencies": {
     "pre-commit": "^1.2.2"

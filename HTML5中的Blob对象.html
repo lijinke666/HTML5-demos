@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>html5中的blob对象和download</title>
+</head>
+<body>
+<a href="Canvas/milk.jpg" download>下载文件</a>
+<a href="Canvas/milk.jpg" download="test.jpg">指定下载文件名字</a>
+<table>
+    <thead>
+    <tr>
+        <td>id</td>
+        <td>名字</td>
+        <td>年龄</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>1</td>
+        <td>赵日天</td>
+        <td>22</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>董村镇</td>
+        <td>444</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>盘精炼</td>
+        <td>666</td>
+    </tr>
+    </tbody>
+</table>
+<a download="text.xls" class="dd">导出为excel表</a>
+</body>
+<script>
+    document.querySelector('.dd').onclick = function(e){
+        e.stopPropagation();
+    }
+</script>
+</html>

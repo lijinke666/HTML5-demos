@@ -1,0 +1,15 @@
+{
+    "name":"lijinke",
+    "short_name":"PWA demo",
+    "display":"standalone",
+    "start_url":"/",
+    "theme_color": "#396",
+    "background_color": "#06a",
+    "icons": [
+      {
+        "src": "demo.jpg",
+        "sizes": "256x256",
+        "type": "image/png"
+      }
+    ]
+}

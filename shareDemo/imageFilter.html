@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>图片滤镜</title>
+  <link rel="stylesheet" href="demo.css">
+</head>
+
+<body>
+  <div class="pull-left text-center">
+    <h3>原图</h3>
+    <canvas id="canvas"></canvas>
+  </div>
+  <div class="pull-left margin-left text-center">
+    <h3>滤镜图</h3>
+    <canvas id="showCanvas"></canvas>
+  </div>
+  <div class="clear"></div>
+  <button data-color="black">三通道变黑</button>
+  <button data-color="red">改变红色通道</button>
+  <button data-color="green">改变绿色通道</button>
+  <button data-color="blue">改变蓝色通道</button>
+  <button data-color="hoary">灰白滤镜</button>
+  <button data-color="blackWhite">黑白滤镜</button>
+</body>
+<script src="demo.js"></script>
+<script>
+  const canvasWidth = 440,
+    canvasHeight = 440
+  const imgSrc = './demo.jpg'
+
+  window.onload = () => {
+    const canvas = $('canvas'),
+      showCanvas = $('showCanvas')
+    const cxt = canvas.getContext('2d'),
+      showCxt = showCanvas.getContext('2d')
+
+    canvas.width = showCanvas.width = canvasWidth;
+    canvas.height = showCanvas.height = canvasHeight;
+
+    loadImage(imgSrc).then(img => {
+      cxt.drawImage(img, 0, 0)
+    })
+
+    let btns = document.querySelectorAll('button');
+    for (let i = 0, len = btns.length; i < len; i++) {
+      btns[i].onclick = function() {
+        const color = this.getAttribute('data-color')
+        imageFilter(canvas, showCanvas, cxt, showCxt, color)
+      }
+    }
+
+  };
+
+  function imageFilter(canvas, showCanvas, cxt, showCxt, type) {
+    //每一个像素由4个元素组成  分别是  r g b a
+    //所以 第 i 个元素  是
+    //r = pixelData[ i*4 +0 ];
+    //g = pixelData[ i*4 +1 ];
+    //b = pixelData[ i*4 +2 ];
+    //a = pixelData[ i*4 +3 ];
+    let imageData = cxt.getImageData(0, 0, canvas.width, canvas.height), //像素信息
+      {
+        data
+      } = imageData,
+      canvasArea = canvas.width * canvas.height;
+
+    switch (type) {
+      case 'black':
+        for (let i = 0; i < data.length; i++) {
+          data[i * 4] = 0; //r通道
+          data[i * 4 + 1] = 0; //g通道
+          data[i * 4 + 2] = 0; //b通道
+        }
+        break;
+      case 'red':
+        for (let i = 0; i < canvasArea; i++) {
+          data[i * 4] = 0;
+        }
+        break;
+      case 'green':
+        for (let i = 0; i < canvasArea; i++) {
+          data[i * 4 + 1] = 0
+        }
+        break;
+      case 'blue':
+        for (let i = 0; i < canvasArea; i++) {
+          data[i * 4 + 2] = 0
+        }
+        break;
+      case 'hoary':
+        for (let i = 0; i < canvasArea; i++) {
+          let r = data[i * 4],
+            g = data[i * 4 + 1],
+            b = data[i * 4] + 2;
+
+          let grey = r * 0.3 + g * 0.59 + b * 0.11; //国际 最佳灰色图像算法
+          data[i * 4] = grey;
+          data[i * 4 + 1] = grey;
+          data[i * 4 + 2] = grey;
+        }
+        break;
+      case 'blackWhite':
+        for (let i = 0; i < canvasArea; i++) {
+          //黑白滤镜 在灰白滤镜的基础上  对灰度进行判断
+          //如果 大于了 白色的一半  让它变为黑色 也就是255
+          //反之为白色 也就是0
+          let r = data[i * 4],
+            g = data[i * 4 + 1],
+            b = data[i * 4] + 2,
+            color = null
+          let grey = r * 0.3 + g * 0.59 + b * 0.11; //国际 最佳灰色图像算法
+
+          if (grey > 255 / 2) {
+            color = 255;
+          } else {
+            color = 0;
+          }
+
+          data[i * 4] = color;
+          data[i * 4 + 1] = color;
+          data[i * 4 + 2] = color;
+        }
+        break;
+    }
+    showCxt.putImageData(imageData, 0, 0, 0, 0, showCanvas.width, showCanvas.height)
+  }
+</script>
+
+</html>

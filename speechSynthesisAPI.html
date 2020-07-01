@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>666</title>
+</head>
+<body>
+<input type="text">
+<button>说话</button>
+</body>
+<script>
+    const defaultSpeech = '祝你鸡年大吉吧'
+    const cnLang = 'zh-CN'
+    const enLang = 'en-US'
+
+    window.onload = ()=>{
+        let lang = undefined;
+        let inp = document.querySelector('input');
+        inp.value = `默认：${defaultSpeech}`;
+        inp.addEventListener('change',()=>{
+            /^\w+$/.test(inp.value) ? lang = enLang : lang = cnLang
+
+        })
+        document.querySelector('button').onclick = ()=>{
+            if(inp.value == "") return alert('请输入')
+            say( inp.value,lang )
+        }
+    }
+    function say( value,lang ) {
+
+        let testSpeech = new window.SpeechSynthesisUtterance();
+
+        //text – 要合成的文字内容，字符串。
+//    lang – 使用的语言，字符串， 例如："zh-cn"
+//    voiceURI – 指定希望使用的声音和服务，字符串。
+//    volume – 声音的音量，区间范围是0到1，默认是1。
+//    rate – 语速，数值，默认值是1，范围是0.1到10，表示语速的倍数，例如2表示正常语速的两倍。
+//    pitch – 表示说话的音高，数值，范围从0（最小）到2（最大）。默认值为1。
+        testSpeech.lang = lang || cnLang
+        testSpeech.text = `${value || defaultSpeech}`
+        testSpeech.rate = 1
+        testSpeech.pitch = 1
+
+//    onstart – 语音合成开始时候的回调。
+//    onpause – 语音合成暂停时候的回调。
+//    onresume – 语音合成重新开始时候的回调。
+//    onend – 语音合成结束时候的回调。
+        testSpeech.onstart = () => {
+            console.log('开始说话')
+        }
+        testSpeech.onend = () => {
+            console.log('说话结束')
+        }
+
+//    speak() – 只能接收SpeechSynthesisUtterance作为唯一的参数，作用是读合成的话语。
+//    stop() – 立即终止合成过程。
+//    pause() – 暂停合成过程。
+//    resume() – 重新开始合成过程。
+//    getVoices – 此方法不接受任何参数，用来返回浏览器支持的语音包列表，是个数组，例如，在我的电脑下，Firefox浏览器返回的语言包是两个：
+        window.speechSynthesis.speak(testSpeech);
+        const voices = window.speechSynthesis.getVoices();
+    }
+</script>
+</html>

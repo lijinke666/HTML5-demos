@@ -1,0 +1,5 @@
+{
+    "name":"李金珂",
+    "age":18,
+    "description":"测试一下 service worker 是否捕获fetch事件"
+}

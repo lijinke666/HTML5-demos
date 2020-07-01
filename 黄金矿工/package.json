@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "browser-sync start --server --files 'index.html,app.js'"
+  },
+  "dependencies": {
+    "browser-sync": "^2.23.6",
+    "pixi.js": "^4.7.0"
+  }
+}

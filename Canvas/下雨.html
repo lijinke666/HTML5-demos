@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>下雨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: black;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    const maxRain = 100
+    const rainArray = []      //存放雨点
+    const canvasWidth = window.innerWidth
+    const canvasHeight = window.innerHeight
+    const canvas = document.getElementById("canvas")
+    const ctx = canvas.getContext('2d')
+
+    canvas.width = canvasWidth
+    canvas.height = canvasHeight
+    window.onload = () => {
+
+        setInterval(rain, 5000)        //每隔一段时间 new 一个雨点
+        rainMove()
+    }
+    function rain() {
+        let rain = new Rain(ctx, Math.random() * canvasWidth, 0, Math.random()*10 +2,Math.random()*6 +2, canvasHeight)
+        rainArray.push(rain)
+
+    }
+
+    // 循环调用实例中的draw方法 
+    function rainMove() {
+        ctx.clearRect(0,0, canvas.width, canvas.height)
+        // if(rainArray.length >= maxRain){
+        //     rainArray.splice(0,1)
+        // }
+        rainArray.forEach((rain) => {
+            rain.draw()
+        })
+        requestAnimationFrame(rainMove)
+    }
+
+    function Rain(ctx, drawX, drawY, speed,r, canvasHeight) {
+        this.ctx = ctx
+        this.drawX = drawX
+        this.drawY = drawY
+        this.speed = speed
+        this.cH = canvasHeight
+        this.draw = function () {
+            this.ctx.save()
+            this.ctx.translate(-100,-100);
+            this.ctx.rotate(15 * Math.PI /180)
+            this.ctx.beginPath()
+            this.ctx.shadowBlur= Math.random() * 10 +2;
+            this.ctx.shadowColor="rgba(0,0,0,.2)";
+            this.ctx.strokeStyle = "#fff"
+            this.ctx.fillStyle = "#fff"
+            this.ctx.arc(this.drawX, this.drawY, r, 0, Math.PI * 2)
+            this.ctx.fill()
+            this.ctx.lineWidth = 2
+            this.ctx.stroke()
+
+            this.ctx.closePath()
+            this.ctx.restore()
+            this.move()
+        }
+        this.move = function () {
+            if (this.drawY >= this.cH) {
+                this.drawY = 0
+            } else {
+                this.drawY += this.speed
+            }
+        }
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="#">
+            <input type="date" name="">
+            <input type="datetime" name="" >
+            <input type="color" name="" >
+            <input type="email" name="">
+            <input type="month" name="">
+            <input type="image" src="./pointer.png" alt="">
+            <input type="search" name="" >
+            <input type="submit" value="触发">
+            <input type="range" name="" >
+            <progress value="10" max="100"></progress>
+    </form>
+    <h2>collpase 折叠</h2>
+    <details>
+        <summary>点我</summary>
+        <p>我是内容</p>
+    </details>
+
+    <h2>右键菜单</h2>
+    <div contextmenu="popup-menu">
+        Right-click to see the adjusted context menu
+    </div>
+    <menu type="context" id="popup-menu">
+        <menuitem type="checkbox" onclick="toggleOption()"
+          checked="true">Checkbox</menuitem>
+        <menuitem type="command" label="Command" icon="icon.png"
+          onclick="doSomething()">Checkbox</menuitem>
+        <menuitem type="radio" name="group1" onclick="option()"
+          checked="true">Radio button 1</menuitem>
+        <menuitem type="radio" name="group1"
+          onclick="option()">Radio button 2</menuitem>
+      </menu>
+
+      <h2>弹框 dialog</h2>
+      <dialog>
+        <p>Greetings, one and all!</p>
+      </dialog>
+
+      <button id="openDialog">显示dialog弹框</button>
+</body>
+<script>
+  let isShow = false
+  const dialog = document.querySelector("dialog")
+
+  document.querySelector('#openDialog').addEventListener('click',()=>{
+    isShow ? dialog.close() : dialog.show()
+    isShow = !isShow
+  })
+  
+</script>
+</html>

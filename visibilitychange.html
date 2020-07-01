@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="test()">点我</button>
+</body>
+<script>
+    function test(){
+        const w = window.open('')
+    }
+    let init = true
+    document.addEventListener('visibilitychange',()=>{
+        if(!document.hidden && init){
+            init = false
+            location.reload()
+        }
+    })
+</script>
+</html>

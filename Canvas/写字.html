@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学写一个字</title>
+    <style>
+        #canvas{
+            display: block;
+            margin: 0 auto;
+        }
+        body{
+            color:#444;
+            text-align: center;
+            font-family: "Microsoft YaHei";
+        }
+        a{
+            display: inline-block;
+            width: 190px;
+            height: 35px;
+            margin-top:15px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 35px;
+            color:#FFF;
+            border-radius: 3px;
+        }
+        body>a:nth-of-type(1){
+            background: #396;
+        }
+        body>a:nth-of-type(2){
+            background: #06A;
+        }
+        body>a:nth-of-type(3){
+            background: #F9655A;
+        }
+        body>a:nth-of-type(4){
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas">学习一个字</canvas>
+<a onclick="drawGrid('#396')">绿</a>
+<a onclick="drawGrid('#06A')">蓝</a>
+<a onclick="drawGrid('#F9655A')">红</a>
+<a onclick="clear()">擦除</a>
+</body>
+<script>
+    /**
+     * Created by lijinke on 2016/4/26.
+     */
+    var canvasWidth = 700;
+    var canvasHeight = canvasWidth;
+    var isMouseDown = false;     //是否按下鼠标
+    var oldZuobiao ={x:0,y:0};   //上一次的坐标
+    var canvas = document.getElementById("canvas");
+    var cxt = canvas.getContext("2d");
+    canvas.width=canvasWidth;
+    canvas.height=canvasHeight;
+
+
+    drawGrid();
+
+    //阻止手机上面的默认事件
+    canvas.onmousedown=function(e){
+        e.preventDefault();
+        isMouseDown = true;
+        oldZuobiao = WindowToCanvas(e.clientX, e.clientY);
+    };
+    canvas.onmouseup=function(e){
+        e.preventDefault();
+        isMouseDown = false;
+    };
+    canvas.onmouseout=function(e){
+        e.preventDefault();
+        isMouseDown = false;
+    };
+    canvas.onmousemove=function(e){
+        e.preventDefault();
+        if(isMouseDown){       //如果鼠标移动的时候鼠标是按下时  执行绘制
+            var nowZuobiao=WindowToCanvas(e.clientX, e.clientY);
+            cxt.beginPath();
+            cxt.moveTo(oldZuobiao.x,oldZuobiao.y);
+            cxt.lineTo(nowZuobiao.x,nowZuobiao.y);
+            cxt.lineWidth=10;
+            cxt.strokeStyle="#444";
+            cxt.lineCap="round";        //线是圆滑的
+            cxt.lineJoin="round";       //两根线过渡圆形
+            cxt.stroke();
+            oldZuobiao = nowZuobiao;
+        }
+    };
+    function WindowToCanvas(x,y){
+        var box = canvas.getBoundingClientRect();        //canvas距离窗口的一些信息   类似  offsetX
+        return {
+            //会出现小数   这里用Math.round  四舍五入
+            x:Math.round(x-box.left),        //鼠标x的坐标 - canvas距离left的坐标 等于canvas的x坐标
+            y:Math.round(y-box.top)          //鼠标Y的坐标 - canvas距离top的坐标 等于canvas的y坐标
+        }
+    }
+    function drawGrid(color){
+        if(typeof color=="undefined"){
+            color="#ccc"
+        }
+        cxt.clearRect(0,0,canvasWidth,canvasHeight)
+        //绘制正方形画布
+        cxt.save();     //保存
+        cxt.strokeStyle=color;    //绘制颜色
+        cxt.beginPath();      //开始路径
+        cxt.moveTo(0,0);      //画笔起点坐标
+        cxt.lineTo(canvasWidth,0);
+        cxt.lineTo(canvasWidth,canvasHeight);
+        cxt.lineTo(0,canvasHeight);
+        cxt.closePath();       //关闭路径
+        cxt.lineWidth=6;      //线条
+        cxt.stroke();          //绘制
+
+        //绘制米字格
+        cxt.beginPath();
+        cxt.moveTo(0,0);
+        cxt.lineTo(canvasWidth,canvasHeight);
+        cxt.moveTo(canvasWidth,0);
+        cxt.lineTo(0,canvasHeight);
+        cxt.moveTo(0,canvasHeight/2);
+        cxt.lineTo(canvasWidth,canvasHeight/2);
+        cxt.moveTo(canvasWidth/2,0);
+        cxt.lineTo(canvasWidth/2,canvasHeight);
+        cxt.closePath();
+        cxt.lineWidth=2;
+        cxt.stroke();
+        cxt.restore();
+    }
+    function clear(){
+        cxt.clearRect(0,0,canvasWidth,canvasHeight);
+        drawGrid();
+    }
+</script>
+</html>

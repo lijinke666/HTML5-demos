@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg圆形进度条动画</title>
+  <style>
+    circle {
+      -webkit-transition: stroke-dasharray .5s cubic-bezier(.59, -0.74, .13, .48);
+      transition: stroke-dasharray .5s cubic-bezier(.59, -0.74, .13, .48);
+      transform: matrix(0, -1, 1, 0, 0, 140);
+      stroke-width: 10;
+    }
+
+    .color1 {
+      stroke: #ccc;
+    }
+
+    .color2 {
+      stroke: red;
+    }
+
+    .color3 {
+      stroke: #D1D3D7;
+    }
+
+    .color4 {
+      stroke: #00A5E0;
+    }
+  </style>
+</head>
+
+<body style="padding-top: 1000px">
+  <svg width="300" height="300" data-circle="0.5">
+    <circle cx="70" cy="70" r="50" fill="none" class="color1"></circle>
+    <circle cx="70" cy="70" r="50" fill="none" class="color2" stroke-dasharray="0 1000"></circle>
+</svg>
+  <svg width="300" height="300" data-circle="0.2">
+    <circle cx="70" cy="70" r="50" fill="none" class="color3"></circle>
+    <circle cx="70" cy="70" r="50" fill="none" class="color4" stroke-dasharray="0 1000"></circle>
+</svg>
+  <svg width="300" height="300" data-circle="0.8">
+    <circle cx="70" cy="70" r="50" fill="none" class="color3"></circle>
+    <circle cx="70" cy="70" r="50" fill="none" stroke="#396" stroke-dasharray="0 1000"></circle>
+</svg>
+  <svg width="300" height="300" data-circle="1">
+    <circle cx="70" cy="70" r="50" fill="none"></circle>
+    <circle cx="70" cy="70" r="50" fill="none" stroke-dasharray="0 1000"></circle>
+</svg>
+</body>
+<script>
+</script>
+
+<script src="../../jquery-1.11.3.js"></script>
+<script>
+  $(function() {
+
+    $(window).scroll(function() {
+      var svg = $('svg');
+      var scrollTop = $(document).scrollTop();
+      if (scrollTop > 200) {
+        svg.each(function() {
+          var _this_ = $(this),
+            c = _this_.data('circle'), //弧度
+            dom = _this_.find("circle:last"),
+            r = _this_.find('circle').attr('r'); //半径
+          rotateCircle(dom, c, r);
+        });
+
+        function rotateCircle(dom, value, r) {
+          var percent = value,
+            perimeter = Math.PI * 2 * r; //2πr   周长
+          dom.attr('stroke-dasharray', perimeter * percent + " " + perimeter * (1 - percent));
+        }
+      }
+    });
+
+
+  })
+</script>
+
+</html>

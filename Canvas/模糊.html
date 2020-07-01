@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <title>微信模糊照片</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="height=device-height,
+                   width=device-width,
+                   initial-scale=1.0,
+                   minimum-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable= no "
+                  />
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #blur-div{
+            width: 768px;
+            height:576px;
+            position: relative;
+            margin: 0 auto;
+        }
+        #image{
+            display: block;
+            margin: 0 auto;
+            -webkit-filter:blur(30px);
+            -moz-filter:blur(30px);
+            -ms-filter:blur(30px);
+            -o-filter:blur(30px);
+            filter:blur(30px);
+            filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius=30, MakeShadow=false); /* IE6~IE9 */
+            position: absolute;
+            left:0;
+            top:0;
+            z-index: 1;
+        }
+        #canvas{
+            position: absolute;
+            z-index: 2;
+            left:0;
+            top:0;
+        }
+        .button{
+            width: 100px;
+            height:30px;
+            display: block;
+            position: absolute;
+            z-index: 200;
+            color:white;
+            text-decoration: none;
+            text-align: center;
+            line-height: 30px;
+            bottom:50px;
+            border-radius: 3px;
+            -webkit-transition:all 0.3s;
+            font-family: "微软雅黑";
+        }
+        #reset{
+            background: #06a;
+            left:50px;
+        }
+        #show{
+            background: #396;
+            right:50px;
+        }
+        #reset:hover{
+            background: #0082d9;
+        }
+        #show:hover{
+            background: #42c684;
+        }
+    </style>
+</head>
+<body>
+<div id="blur-div">
+    <img src="../NodeJS/myfile/images/milk.jpg" alt="" id="image"/>
+    <canvas id="canvas"></canvas>
+    <a href="javascript:reset();" class="button" id="reset">随机</a>
+    <a href="javascript:show();" class="button" id="show">显示</a>
+</div>
+
+</body>
+<script src="js/jquery-1.11.3.js"></script>
+<script src="blur.js"></script>
+</html>

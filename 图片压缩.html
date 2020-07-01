@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图片压缩</title>
+    <style>
+        .item {
+            min-width: 100px;
+            min-height: 100px;
+            border: 1px solid #ccc;
+            margin-right: 30px;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        <input type="file" value="选择图片进行压缩" /> 压缩比例(0-1) 0 <input type="range" min="0" max="1" step="0.1" value="0.5"> 1
+    </p>
+
+    <div class="item">
+        <p>未压缩的图片</p>
+        <p class="old-img"></p>
+    </div>
+    <div class="item">
+        <p>压缩之后的图片</p>
+        <p class="compress-img"></p>
+    </div>
+</body>
+<script>
+    const $ = (seletor) => {
+        return document.querySelector(seletor)
+    }
+    const inp = $('input[type="file"]')
+    const range = $('input[type="range"]')
+    inp.onchange = function () {
+        const file = this.files[0]
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const result = e.target.result
+            const img = new Image()
+            img.src = result
+            img.onload = () => {
+                $('.old-img').appendChild(img)
+                const compressImg = new Image()
+
+                const canvas = document.createElement('canvas')
+                const ctx = canvas.getContext('2d')
+                canvas.width = img.width;
+                canvas.height = img.height
+                ctx.drawImage(img, 0, 0, img.width, img.height)
+                const compress = canvas.toDataURL('image/jpeg', Number(range.value))
+                compressImg.src = compress;
+                compressImg.onload = () => {
+                    $('.compress-img').appendChild(compressImg)
+                }
+            }
+
+        }
+        reader.onerror = () => alert('图片读取失败!')
+        reader.readAsDataURL(file)
+    }
+
+</script>
+
+</html>

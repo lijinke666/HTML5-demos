@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        canvas{
+            display: block;
+            margin: 0 auto;
+            border:1px solid #444;
+        }
+        button{
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas">
+    不支持canvas
+</canvas>
+<button id="btn">展开</button>
+</body>
+<script>
+    var img = "milk.jpg";
+    var canvas = document.getElementById("canvas");
+    var button = document.getElementById("btn");
+    var ljk = canvas.getContext("2d");
+    canvas.width = 440;
+    canvas.height = canvas.width;
+    var image = new Image();
+    image.src = img;
+
+    var r = 50;
+    image.onload = function(){
+        clipImage( image ,r );
+    }
+
+    button.onclick= function(){
+        var set = setInterval(function(){
+            if( r >= Math.max( canvas.width ,canvas.height )*1.5){
+                clearInterval( set );
+            }
+            r+=10;
+            clipImage( image ,r);
+
+        },30)
+
+    }
+    function clipImage( img ,r ){
+        ljk.clearRect(0,0,canvas.width,canvas.height);
+        ljk.beginPath();
+        ljk.save();
+        ljk.arc(100,100,r,0,Math.PI*2,false );
+        ljk.clip();
+        ljk.drawImage( img, 0,0 );
+        ljk.restore();
+    }
+    function drawImage( img ){
+        ljk.beginPath();
+        ljk.drawImage( img, 0, 0);
+    }
+</script>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>service Worker 可以替代manifest的缓存技术</title>
+</head>
+<body>
+    <h2>测试一下,在张鑫旭大大那里学到的</h2>
+    <img src="./Canvas/milk.jpg" alt="">
+</body>
+<script>
+    if('serviceWorker' in navigator){
+        //注册一个 service workers 这个相当于另外一个线程
+        navigator.serviceWorker.register('./serviceWorkerCache.js',{
+            scope:"./"
+        }).then((reg)=>{
+            console.log('注册成功');
+        }).catch(()=>{
+            console.log('注册失败');
+        })
+    }else{
+        alert('不支持')
+    }
+</script>
+</html>

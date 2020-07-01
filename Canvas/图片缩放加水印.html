@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片缩放加水印</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family:'Microsoft YaHei';
+        }
+        canvas{
+            display: block;
+            margin: 50px auto;
+            border:1px solid #ccc;
+        }
+        input[type='range']{
+            display: block;
+            margin: 20px auto;
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>       <!--图片缩放canvas-->
+<input type="range" min="0.5" max="3.0" step="0.01" value="1.0" id="range"/>
+<canvas id="logo-canvas" style="display: none"></canvas>  <!--水印canvas-->
+</body>
+<script>
+    window.onload=function(){
+        var canvas = document.getElementById("canvas");
+        var logo_canvas = document.getElementById("logo-canvas");
+        var ljk = canvas.getContext("2d");
+        var logo = logo_canvas.getContext("2d");
+        var range = document.getElementById("range");
+        canvas.width = 440;
+        canvas.height= 440;
+
+        var image = new Image();
+        image.src = 'milk.jpg';
+        var scale = range.value;
+        image.onload=function(){                  //图片加载后执行
+            draw(scale);
+            range.onmousemove = function(){         //拖动滑轮缩放
+                scale = range.value;
+                draw( scale );
+            }
+
+            //添加水印   (离屏canvas   将第二个canvas添加到第一个canvas中)
+            logo.font="bold 50px Microsoft YaHei";
+            logo.fillStyle="rgba(255,255,255,.5)";
+            logo.textBaseline="middle";
+            logo.fillText("水印",50,50);
+        };
+        function draw( scale ){
+            ljk.clearRect(0,0,canvas.width,canvas.height);
+            if(typeof scale == "undefined"){
+                scale = 1.0;
+            }
+            var imageWidth = canvas.width * scale;         //获得图片缩放后的宽高
+            var imageHeight = canvas.height * scale;
+
+            var rx = (canvas.width - imageWidth) /2;           //放大之后的图片位置x坐标
+            var ry = (canvas.height - imageHeight) /2;         //放大之后的图片位置y坐标
+            ljk.drawImage(image,rx,ry,imageWidth,imageWidth);   //绘制缩放后的图片
+            ljk.drawImage(logo_canvas,canvas.width-logo_canvas.width,canvas.width-logo_canvas.height);           //绘制水印
+        }
+
+    }
+
+</script>
+</html>

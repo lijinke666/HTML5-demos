@@ -4,7 +4,6 @@
     "pwa": "cd PWA && http-server -c-1",
     "bookmark": "bookmark -p /HTML5-demos/"
   },
-  "pre-commit": "bookmark",
   "dependencies": {
     "browser-sync": "^2.18.12",
     "j-bookmark": "^0.2.1"
